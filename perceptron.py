@@ -2,11 +2,12 @@ import sys
 
 
 class Perceptron:
-    def __init__(self, numInputs=0):
+    def __init__(self, numInputs=0, bias=0):
         self.numInputs = numInputs
-        self.weights = 0
+        self.weights = [.5] * self.numInputs
         self.output = 0
         self.learnRate = .1 # Default learning rate
+        self.bias = bias
 
     
     def Activation(self, i):
@@ -32,10 +33,11 @@ class Perceptron:
 
         for i in range(len(inputs)):
             self.output += inputs[i] * self.weights[i]
+        self.output += self.bias
         self.output = self.Activation(self.output)
         return self.output
     
-    def trainOnInput(self, inputArray, targetArray):
+    def trainOne(self, inputArray, targetArray):
 
         if (self.numInputs == 0):
             self.numInputs = len(inputArray)
@@ -65,7 +67,7 @@ class Perceptron:
         while not trained:
 
             iter += 1
-            guesses = self.trainOnInput(X, Y)
+            guesses = self.trainOne(X, Y)
 
             right = 0
             for gu in range(len(Y)):
@@ -73,7 +75,7 @@ class Perceptron:
                     right += 1
                 
             
-            if iter > rounds or right >= len(Y) - (0):
+            if iter > rounds-1 or right >= len(Y) - (0):
                 input(f"Trained '{iter}' rounds | '{right}' Correct out of '{len(Y)}' | Accuracy : {(right / len(Y)) * 100}% ")
                 trained = True
                 
